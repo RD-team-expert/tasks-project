@@ -1,0 +1,30 @@
+<div class="container">
+    <h2>Edit projectQuestionRating</h2>
+    <form action="{{ route('project_question_ratings.update', $projectQuestionRating->id) }}" method="POST">
+        @csrf
+        @method("PATCH")
+        <div class="mb-3">
+            <label for="project_rating_id" class="form-label">project_rating_id</label>
+            <input type="text" class="form-control" name="project_rating_id" value="{{old("project_rating_id", $projectQuestionRating["project_rating_id"])}}">
+            @error("project_rating_id")
+                <p>{{$message}}</p>
+            @enderror
+        </div>
+<div class="mb-3">
+            <label for="question_id" class="form-label">question_id</label>
+            <input type="text" class="form-control" name="question_id" value="{{old("question_id", $projectQuestionRating["question_id"])}}">
+            @error("question_id")
+                <p>{{$message}}</p>
+            @enderror
+        </div>
+<div class="mb-3">
+            <label for="rating" class="form-label">rating</label>
+            <input type="text" class="form-control" name="rating" value="{{old("rating", $projectQuestionRating["rating"])}}">
+            @error("rating")
+                <p>{{$message}}</p>
+            @enderror
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>

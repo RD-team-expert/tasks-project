@@ -14,7 +14,12 @@ class QuestionService
 
     public function createQuestion(QuestionRequest $request)
     {
-        return Question::create($request->validated());
+//         dd($request->validated()['text']);
+
+        return Question::create([
+            'text' => $request->validated()['text'],
+            'created_by' => auth()->user()->id,
+        ]);
     }
 
     public function updateQuestion(QuestionRequest $request, Question $question)

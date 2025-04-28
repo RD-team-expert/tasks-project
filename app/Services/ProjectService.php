@@ -62,7 +62,34 @@ class ProjectService
         })->orWhere('assigned_to', $currentUser->id)
           ->latest()
           ->paginate(10);
-          
+
+    }
+    public function getProjectEditData(Project $project)
+    {
+        $user = auth()->user();
+
+        // Authorization check
+        if ($user->role !== 'Admin' && $project->created_by !== $user->id) {
+            abort(403, 'You can only edit your own projects unless you are Admin.');
+        }
+
+        // Get available employees to assign
+        $employees = $user->role === 'Admin'
+            ? User::where('role', 'Employee')->get()
+            : User::where('group_id', $user->group_id)->where('role', 'Employee')->get();
+
+        // Get available managers (only for Admin role)
+        $managers = $user->role === 'Admin'
+            ? User::where('role', 'Manager')->get()
+            : collect();
+
+        // Return all data needed by the edit view
+        return [
+            'project' => $project->load('employees', 'manager'),
+            'employees' => $employees,
+            'managers' => $managers,
+            'selectedEmployees' => $project->employees()->pluck('users.id')->toArray(),
+        ];
     }
 
     public function getManagerGroupEmployees()
@@ -89,7 +116,7 @@ class ProjectService
     }
 
     // Determine manager_id based on role
-    $managerId = $user->role === 'Admin' 
+    $managerId = $user->role === 'Admin'
         ? ($validated['manager_id'] ?? null)
         : $user->id; // Managers should assign themselves by default
 
@@ -106,8 +133,8 @@ class ProjectService
     // Handle employee assignments
     if ($request->has('employees') ) {
         // Ensure employees is an array and attach
-        $employees = is_array($validated['employees']) 
-            ? $validated['employees'] 
+        $employees = is_array($validated['employees'])
+            ? $validated['employees']
             : [$validated['employees']];
         $project->employees()->attach($employees);
     }
@@ -236,5 +263,6 @@ class ProjectService
         }
         return $project->questions()->with('rater')->get();
     }
+
 
 }

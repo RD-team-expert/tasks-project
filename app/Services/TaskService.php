@@ -183,4 +183,36 @@ class TaskService
 
         return $taskRating;
     }
+
+    public function edit(Task $task)
+    {
+        $user = auth()->user();
+
+        // Authorization: Admin can edit any task, Manager only their own
+        if ($user->role === 'Manager' && $task->creator->id !== $user->id) {
+            abort(403, 'You can only edit your own tasks.');
+        }
+
+        // Get available projects for dropdown
+        $projects = ($user->role === 'Admin')
+            ? Project::all()
+            : Project::where('created_by', $user->id)->get();
+
+        // Get assignable employees
+        $employees = ($user->role === 'Admin')
+            ? User::where('role', 'Employee')->get()
+            : User::where('group_id', $user->group_id)->where('role', 'Employee')->get();
+
+        // Questions list (for attach)
+        $questions = Question::all();
+
+        // Pass everything to the view
+        return [
+            'task' => $task,
+            'projects' => $projects,
+            'employees' => $employees,
+            'questions' => $questions,
+            'selectedQuestionIds' => $task->questions()->pluck('questions.id')->toArray(),
+        ];
+    }
 }

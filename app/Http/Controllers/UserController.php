@@ -58,6 +58,12 @@ class UserController extends Controller
         return view('users.create-employee');
     }
 
+    public function show(User $user): \Illuminate\Contracts\View\View
+    {
+        return view('users.show', compact('user'));
+    }
+
+
     public function storeEmployee(Request $request): \Illuminate\Http\RedirectResponse
     {
         $this->userService->createEmployee($request);

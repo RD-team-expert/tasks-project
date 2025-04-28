@@ -1,25 +1,78 @@
-<div class="container">
-<h2>groups List</h2>
-<a href="{{ route('groups.create') }}" class="btn btn-primary mb-3">Create groups</a>
-<table class="table">
-    <thead>
-        <tr><th>name</th><th>manager_id</th></tr>
-    </thead>
-    <tbody>
-        @foreach ($groups as $item)
-                <tr>
-                    <td>{{$item->name}}</td>
-<td>{{$item->manager_id}}</td>
-<td>
-                        <a href="{{ route('groups.edit', $item->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <form action="{{ route('groups.destroy', $item->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
+@extends('layouts.app')
+
+@section('title', 'Groups List')
+
+@section('content')
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        .card-hover:hover {
+            transform: scale(1.05);
+        }
+    </style>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-3xl font-bold text-black">Groups List</h2>
+            <a href="{{ route('groups.create') }}" class="bg-[#28A745] text-white px-4 py-2 rounded hover:bg-[#218838] transition duration-150">Create Group</a>
+        </div>
+
+        <!-- Search Form -->
+        <form method="GET" action="{{ route('groups.index') }}" class="mb-6">
+            <div class="flex">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search groups..." class="w-full border border-[#D3D3D3] rounded-l px-3 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#28A745]">
+                <button type="submit" class="bg-[#28A745] text-white px-4 py-2 rounded-r hover:bg-[#218838] transition duration-150">Search</button>
+            </div>
+        </form>
+
+        <!-- Groups Grid -->
+        @if(!$groups || $groups->isEmpty())
+            <p class="text-center text-gray-600">No groups available.</p>
+        @else
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach ($groups as $group)
+                    <div class="bg-white shadow-md rounded-lg p-4 transition duration-300 cursor-pointer card-hover animate-fade-in"
+                         onclick="window.location.href='{{ route('groups.show', $group->id) }}'"
+                         style="animation-delay: {{ $loop->index * 0.1 }}s;">
+                        <h3 class="text-lg font-semibold text-black mb-2">{{ $group->name }}</h3>
+
+                        <div class="text-sm text-gray-500 mb-1">
+                            <i class="fas fa-user-tie mr-1 text-blue-500"></i>
+                            Manager: {{ $group->manager->username ?? 'N/A' }}
+                        </div>
+
+                        <div class="text-sm text-gray-500 mb-4">
+                            <i class="fas fa-users mr-1 text-purple-500"></i>
+                            Employees:
+                            @if($group->employees->isNotEmpty())
+                                {{ $group->employees->pluck('username')->join(', ') }}
+                            @else
+                                None
+                            @endif
+                        </div>
+
+                        <div class="flex justify-end space-x-2" onclick="event.stopPropagation()">
+                            <a href="{{ route('groups.edit', $group->id) }}" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 transition duration-150">Edit</a>
+                            <form action="{{ route('groups.destroy', $group->id) }}" method="POST" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition duration-150" onclick="event.stopPropagation(); return confirm('Are you sure?')">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+            <!-- Pagination -->
+            <div class="mt-6">
+                {{ $groups->appends(request()->query())->links() }}
+            </div>
+        @endif
+    </div>
+@endsection

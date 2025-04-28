@@ -17,9 +17,13 @@ class ProjectController extends Controller
         $this->projectService = $projectService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $projects = $this->projectService->getAllProjects();
+        $search = $request->input('search');
+        $projects = Project::when($search, function ($query) use ($search) {
+            return $query->where('name', 'like', '%' . $search . '%');
+        })->paginate(10);
+
         return view('projects.index', compact('projects'));
     }
 
@@ -80,5 +84,11 @@ class ProjectController extends Controller
     {
         $this->projectService->rateQuestion($request, $question);
         return redirect()->back()->with('success', 'Question rated.');
+    }
+
+    public function edit(Project $project)
+    {
+      $data=  $this->projectService->getProjectEditData($project);
+        return view('projects.edit', $data);
     }
 }

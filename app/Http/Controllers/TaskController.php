@@ -8,6 +8,7 @@ use App\Models\Question;
 use App\Models\Task;
 use App\Services\TaskService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
@@ -77,5 +78,11 @@ class TaskController extends Controller
     public function show(Task $task): \Illuminate\Contracts\View\View
     {
         return view('tasks.show', compact('task'));
+    }
+
+    public function edit(Task $task)
+    {
+        $data = $this->taskService->edit($task);
+        return view('tasks.edit', $data);
     }
 }

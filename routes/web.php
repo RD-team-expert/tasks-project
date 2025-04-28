@@ -14,7 +14,8 @@ Route::get('/', function () {
 
 // Admin, and Manager routes
 Route::middleware(['auth', RoleMiddleware::class . ':Admin,Manager'])->group(function () {
-    Route::resource('projects', ProjectController::class);
+    Route::resource('projects', ProjectController::class)->except('store');
+    Route::post('projects', [ProjectController::class,'store'])->name('projects.store');
     Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])->name('users.index');
     Route::resource('tasks', TaskController::class);
     Route::post('tasks/{task}/submit-rating', [TaskController::class, 'submitRating'])->name('tasks.submitRating');

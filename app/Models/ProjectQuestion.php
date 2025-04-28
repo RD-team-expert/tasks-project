@@ -20,4 +20,11 @@ class ProjectQuestion extends Model
     {
         return $this->belongsTo(User::class, 'rated_by');
     }
+
+    public function rating()
+    {
+        return $this->hasOne(ProjectQuestionRating::class); // or whatever your rating model is
+    }
+
+
 }

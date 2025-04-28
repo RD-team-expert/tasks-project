@@ -34,6 +34,11 @@ class GroupController extends Controller
         return redirect()->route('groups.index')->with('success', 'Group created successfully.');
     }
 
+    public function show(Group $group): \Illuminate\Contracts\View\View
+    {
+        return view('groups.show', compact('group'));
+    }
+
     public function edit(Group $group)
     {
         $group = $this->groupService->findGroup($group);

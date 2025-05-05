@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true', sidebarCollapsed: false, notificationsOpen: false }" x-init="darkMode ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark'); $watch('darkMode', value => { localStorage.setItem('darkMode', value); document.documentElement.classList.toggle('dark', value); })">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', config('app.name', 'Dashboard'))</title>
+    <link rel="stylesheet" href="{{ asset('build/assets/app-3zy86uaP.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- @vite(['resources/css/app.css', 'resources/js/app.js'])--}}
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="{{ asset('build/assets/app-Bo-u61x1.js') }}"></script>
     @stack('styles')
     <style>
         /* Global Styles */
@@ -51,28 +54,61 @@
 
         /* Animations */
         @keyframes slideInLeft {
-            from { transform: translateX(-100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         @keyframes fadeInUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         @keyframes scaleIn {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
         }
 
         @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(90deg); }
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(90deg);
+            }
         }
 
         /* Sidebar Styles */
@@ -110,7 +146,8 @@
             margin: 0;
         }
 
-        .toggle-sidebar, .dark-mode-toggle {
+        .toggle-sidebar,
+        .dark-mode-toggle {
             background: none;
             border: none;
             color: var(--text-sidebar);
@@ -158,7 +195,8 @@
             scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
         }
 
-        .sidebar-nav a, .sidebar-nav button {
+        .sidebar-nav a,
+        .sidebar-nav button {
             display: flex;
             align-items: center;
             padding: 0.75rem 1rem;
@@ -169,7 +207,8 @@
             font-size: 0.95rem;
         }
 
-        .sidebar-nav a:hover, .sidebar-nav button:hover {
+        .sidebar-nav a:hover,
+        .sidebar-nav button:hover {
             background: rgba(255, 255, 255, 0.1);
             transform: translateY(-2px);
             animation: bounce 0.4s ease;
@@ -242,7 +281,7 @@
             animation: fadeInUp 0.5s ease-out;
         }
 
-        .sidebar.collapsed ~ .content {
+        .sidebar.collapsed~.content {
             margin-left: 80px;
             width: calc(100% - 80px);
         }
@@ -262,7 +301,7 @@
                 width: calc(100% - 80px);
             }
 
-            .sidebar.collapsed ~ .content {
+            .sidebar.collapsed~.content {
                 margin-left: 0;
                 width: 100%;
             }
@@ -275,23 +314,24 @@
         }
     </style>
 </head>
+
 <body class="flex min-h-screen">
-<!-- Sidebar with Integrated Navbar -->
-<div class="sidebar" :class="{ collapsed: sidebarCollapsed }">
-    <!-- Sidebar Header (Navbar Content) -->
-    <div class="sidebar-header">
-        <div class="flex items-center justify-between">
-            <h2 x-show="!sidebarCollapsed">{{ config('app.name', 'Dashboard') }}</h2>
-            <div class="flex items-center space-x-2">
-                <button class="dark-mode-toggle" @click="darkMode = !darkMode">
-                    <i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon'" class="text-lg"></i>
-                </button>
-                <button class="toggle-sidebar" @click="sidebarCollapsed = !sidebarCollapsed" :class="{ 'active': sidebarCollapsed }">
-                    <i class="fas fa-bars text-white"></i>
-                </button>
+    <!-- Sidebar with Integrated Navbar -->
+    <div class="sidebar" :class="{ collapsed: sidebarCollapsed }">
+        <!-- Sidebar Header (Navbar Content) -->
+        <div class="sidebar-header">
+            <div class="flex items-center justify-between">
+                <h2 x-show="!sidebarCollapsed">{{ config('app.name', 'Dashboard') }}</h2>
+                <div class="flex items-center space-x-2">
+                    <button class="dark-mode-toggle" @click="darkMode = !darkMode">
+                        <i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon'" class="text-lg"></i>
+                    </button>
+                    <button class="toggle-sidebar" @click="sidebarCollapsed = !sidebarCollapsed" :class="{ 'active': sidebarCollapsed }">
+                        <i class="fas fa-bars text-white"></i>
+                    </button>
+                </div>
             </div>
-        </div>
-        @auth
+            @auth
             <div class="flex flex-col space-y-3 mt-4">
                 <!-- Notifications Dropdown -->
                 <div class="relative notifications" x-show="!sidebarCollapsed">
@@ -300,96 +340,96 @@
                     </button>
                     <div x-show="notificationsOpen" class="notification-dropdown absolute left-0 top-full mt-2 p-4 w-80">
                         @forelse(auth()->user()->unreadNotifications as $notification)
-                            <div class="border-b py-2">
-                                <p class="text-sm">
-                                    <strong>{{ $notification->data['completed_by'] }}</strong> completed task
-                                    <strong>{{ $notification->data['task_name'] }}</strong>.
-                                </p>
-                                <small class="text-gray-500 dark:text-gray-400">{{ $notification->created_at->diffForHumans() }}</small>
-                                <a href="{{ route('tasks.show', $notification->data['task_id']) }}" class="text-blue-500 dark:text-blue-400 text-sm block mt-1 hover:underline">
-                                    View Task
-                                </a>
-                            </div>
+                        <div class="border-b py-2">
+                            <p class="text-sm">
+                                <strong>{{ $notification->data['completed_by'] }}</strong> completed task
+                                <strong>{{ $notification->data['task_name'] }}</strong>.
+                            </p>
+                            <small class="text-gray-500 dark:text-gray-400">{{ $notification->created_at->diffForHumans() }}</small>
+                            <a href="{{ route('tasks.show', $notification->data['task_id']) }}" class="text-blue-500 dark:text-blue-400 text-sm block mt-1 hover:underline">
+                                View Task
+                            </a>
+                        </div>
                         @empty
-                            <p class="text-gray-500 dark:text-gray-400">No new notifications.</p>
+                        <p class="text-gray-500 dark:text-gray-400">No new notifications.</p>
                         @endforelse
                     </div>
                 </div>
                 <!-- User Info -->
                 <span class="text-sm user-info" x-show="!sidebarCollapsed">{{ auth()->user()->username }}</span>
             </div>
-        @endauth
-    </div>
+            @endauth
+        </div>
 
-    <!-- Sidebar Navigation -->
-    <div class="sidebar-nav">
-        @auth
+        <!-- Sidebar Navigation -->
+        <div class="sidebar-nav">
+            @auth
             @if(auth()->user()->role === 'Employee')
-                <a href="{{ route('projects.myProjects') }}" class="{{ request()->routeIs('projects.myProjects') ? 'active' : '' }}">
-                    <i class="fas fa-project-diagram"></i>
-                    <span x-show="!sidebarCollapsed">My Projects</span>
-                </a>
-                <a href="{{ route('tasks.myTasks') }}" class="{{ request()->routeIs('tasks.myTasks') ? 'active' : '' }}">
-                    <i class="fas fa-tasks"></i>
-                    <span x-show="!sidebarCollapsed">My Tasks</span>
-                </a>
+            <a href="{{ route('projects.myProjects') }}" class="{{ request()->routeIs('projects.myProjects') ? 'active' : '' }}">
+                <i class="fas fa-project-diagram"></i>
+                <span x-show="!sidebarCollapsed">My Projects</span>
+            </a>
+            <a href="{{ route('tasks.myTasks') }}" class="{{ request()->routeIs('tasks.myTasks') ? 'active' : '' }}">
+                <i class="fas fa-tasks"></i>
+                <span x-show="!sidebarCollapsed">My Tasks</span>
+            </a>
             @else
-                <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span x-show="!sidebarCollapsed">Dashboard</span>
+            <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                <i class="fas fa-tachometer-alt"></i>
+                <span x-show="!sidebarCollapsed">Dashboard</span>
+            </a>
+            <a href="{{ route('projects.index') }}" class="{{ request()->routeIs('projects.*') ? 'active' : '' }}">
+                <i class="fas fa-project-diagram"></i>
+                <span x-show="!sidebarCollapsed">Projects</span>
+            </a>
+            <a href="{{ route('tasks.index') }}" class="{{ request()->routeIs('tasks.*') ? 'active' : '' }}">
+                <i class="fas fa-tasks"></i>
+                <span x-show="!sidebarCollapsed">Tasks</span>
+            </a>
+            <a href="{{ route('groups.index') }}" class="{{ request()->routeIs('groups.*') ? 'active' : '' }}">
+                <i class="fas fa-users"></i>
+                <span x-show="!sidebarCollapsed">Groups</span>
+            </a>
+            <a href="{{ route('users.index') }}" class="{{ request()->routeIs('users.*') ? 'active' : '' }}">
+                <i class="fas fa-user-friends"></i>
+                <span x-show="!sidebarCollapsed">Users</span>
+            </a>
+            @if(auth()->user()->role === 'Admin')
+            <a href="{{ route('questions.index') }}" class="{{ request()->routeIs('questions.*') ? 'active' : '' }}">
+                <i class="fas fa-question-circle"></i>
+                <span x-show="!sidebarCollapsed">Questions</span>
+            </a>
+            @endif
+            <div style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                <a href="{{ route('projects.create') }}">
+                    <i class="fas fa-plus-circle"></i>
+                    <span x-show="!sidebarCollapsed">New Project</span>
                 </a>
-                <a href="{{ route('projects.index') }}" class="{{ request()->routeIs('projects.*') ? 'active' : '' }}">
-                    <i class="fas fa-project-diagram"></i>
-                    <span x-show="!sidebarCollapsed">Projects</span>
-                </a>
-                <a href="{{ route('tasks.index') }}" class="{{ request()->routeIs('tasks.*') ? 'active' : '' }}">
-                    <i class="fas fa-tasks"></i>
-                    <span x-show="!sidebarCollapsed">Tasks</span>
-                </a>
-                <a href="{{ route('groups.index') }}" class="{{ request()->routeIs('groups.*') ? 'active' : '' }}">
-                    <i class="fas fa-users"></i>
-                    <span x-show="!sidebarCollapsed">Groups</span>
-                </a>
-                <a href="{{ route('users.index') }}" class="{{ request()->routeIs('users.*') ? 'active' : '' }}">
-                    <i class="fas fa-user-friends"></i>
-                    <span x-show="!sidebarCollapsed">Users</span>
+                <a href="{{ route('tasks.create') }}">
+                    <i class="fas fa-plus-square"></i>
+                    <span x-show="!sidebarCollapsed">New Task</span>
                 </a>
                 @if(auth()->user()->role === 'Admin')
-                    <a href="{{ route('questions.index') }}" class="{{ request()->routeIs('questions.*') ? 'active' : '' }}">
-                        <i class="fas fa-question-circle"></i>
-                        <span x-show="!sidebarCollapsed">Questions</span>
-                    </a>
+                <a href="{{ route('groups.create') }}">
+                    <i class="fas fa-user-plus"></i>
+                    <span x-show="!sidebarCollapsed">New Group</span>
+                </a>
+                <a href="{{ route('questions.create') }}">
+                    <i class="fas fa-question"></i>
+                    <span x-show="!sidebarCollapsed">New Question</span>
+                </a>
+                <a href="{{ route('users.create') }}">
+                    <i class="fas fa-user-plus"></i>
+                    <span x-show="!sidebarCollapsed">New User</span>
+                </a>
                 @endif
-                <div style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
-                    <a href="{{ route('projects.create') }}">
-                        <i class="fas fa-plus-circle"></i>
-                        <span x-show="!sidebarCollapsed">New Project</span>
-                    </a>
-                    <a href="{{ route('tasks.create') }}">
-                        <i class="fas fa-plus-square"></i>
-                        <span x-show="!sidebarCollapsed">New Task</span>
-                    </a>
-                    @if(auth()->user()->role === 'Admin')
-                        <a href="{{ route('groups.create') }}">
-                            <i class="fas fa-user-plus"></i>
-                            <span x-show="!sidebarCollapsed">New Group</span>
-                        </a>
-                        <a href="{{ route('questions.create') }}">
-                            <i class="fas fa-question"></i>
-                            <span x-show="!sidebarCollapsed">New Question</span>
-                        </a>
-                        <a href="{{ route('users.create') }}">
-                            <i class="fas fa-user-plus"></i>
-                            <span x-show="!sidebarCollapsed">New User</span>
-                        </a>
-                    @endif
-                    @if(auth()->user()->role === 'Manager')
-                        <a href="{{ route('users.createEmployee') }}">
-                            <i class="fas fa-user-tie"></i>
-                            <span x-show="!sidebarCollapsed">Add Employee</span>
-                        </a>
-                    @endif
-                </div>
+                @if(auth()->user()->role === 'Manager')
+                <a href="{{ route('users.createEmployee') }}">
+                    <i class="fas fa-user-tie"></i>
+                    <span x-show="!sidebarCollapsed">Add Employee</span>
+                </a>
+                @endif
+            </div>
             @endif
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
@@ -398,13 +438,14 @@
                     <span x-show="!sidebarCollapsed">Logout</span>
                 </button>
             </form>
-        @endauth
+            @endauth
+        </div>
     </div>
-</div>
 
-<!-- Main Content Area -->
-<div class="content">
-    <main class="container mx-auto px-4">
-        @yield('content')
-    </main>
-</div>
+    <!-- Main Content Area -->
+    <div class="content">
+        <main class="container mx-auto px-4">
+            @yield('content')
+        </main>
+    </div>
+</body>

@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', config('app.name', 'Laravel App'))</title>
-    <!-- Include Tailwind CSS -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <!-- @vite('resources/css/app.css') -->
+   
       <link rel="stylesheet" href="{{ url('build/assets/app-3zy86uaP.css') }}">
 
 </head>

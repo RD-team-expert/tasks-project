@@ -5,11 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', config('app.name', 'Dashboard'))</title>
-    <link rel="stylesheet" href="{{ asset('build/assets/app-3zy86uaP.css') }}">
+    <!-- Replace Vite with direct asset links -->
+    <link rel="stylesheet" href="{{ url('build/assets/app-3zy86uaP.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     {{-- @vite(['resources/css/app.css', 'resources/js/app.js'])--}}
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="{{ asset('build/assets/app-Bo-u61x1.js') }}"></script>
+    <script src="{{ url('build/assets/app-Bo-u61x1.js') }}"></script>
     @stack('styles')
     <style>
         /* Global Styles */

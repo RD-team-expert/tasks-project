@@ -95,26 +95,39 @@ class TaskService
         return $task;
     }
 
-    public function updateTask(Request $request, Task $task)
+    public function updateTask(TaskRequest $request, Task $task)
     {
         $validated = $request->validate([
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-            'status' => 'required|in:Not Started,In Progress,Completed',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'project_id' => 'required|exists:projects,id',
+            'assigned_to' => 'required|exists:users,id',
+            'questions' => 'nullable|array',
+            'questions.*' => 'exists:questions,id',
+            'new_question' => 'nullable|string',
+            'ratings' => 'nullable|array',
+            'ratings.*' => 'required|integer|min:1|max:5',
+            'answers' => 'nullable|array',
+            'answers.*' => 'nullable|string',
         ]);
 
-        $taskRating = TaskRating::create([
-            'task_id' => $task->id,
-            'review' => null,
-        ]);
-
-        foreach ($validated['ratings'] as $questionId => $ratingValue) {
-            TaskQuestionRating::create([
-                'task_rating_id' => $taskRating->id,
-                'question_id' => $questionId,
-                'rating' => $ratingValue,
-                'answer' => $validated['answers'][$questionId],
+        // Only create TaskRating if ratings are provided
+        if (array_key_exists('ratings', $validated)) {
+            $taskRating = TaskRating::create([
+                'task_id' => $task->id,
+                'review' => null,
             ]);
+
+            foreach ($validated['ratings'] as $questionId => $ratingValue) {
+                TaskQuestionRating::create([
+                    'task_rating_id' => $taskRating->id,
+                    'question_id' => $questionId,
+                    'rating' => $ratingValue,
+                    'answer' => $validated['answers'][$questionId] ?? null,
+                ]);
+            }
         }
 
         return $task->update($validated);

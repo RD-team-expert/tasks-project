@@ -51,7 +51,12 @@ class TaskController extends Controller
     public function update(TaskRequest $request, Task $task)
     {
         $this->taskService->updateTask($request, $task);
-        return redirect()->route('my.tasks')->with('success', 'Task details updated.');
+
+        if (auth()->user()->role === 'Employee') {
+            return redirect()->route('my.tasks')->with('success', 'Task details updated.');
+        }
+
+        return redirect()->route('tasks.index')->with('success', 'Task details updated.');
     }
 
     public function updateDetails(TaskRequest $request, Task $task)

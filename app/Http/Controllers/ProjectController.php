@@ -73,6 +73,10 @@ class ProjectController extends Controller
         $this->projectService->updateStatus($request, $project);
         return redirect()->route('projects.manager')->with('success', 'Status updated.');
     }
+    public function update(Request $request, Project $project)
+    {
+        $this->projectService->update($request, $project);
+        return redirect()->route('projects.show', $project)->with('success', 'Project updated successfully.');    }
 
     public function addQuestion(Request $request, Project $project)
     {

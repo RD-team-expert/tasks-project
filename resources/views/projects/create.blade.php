@@ -102,6 +102,14 @@
         .dark-mode .bg-gray-100 {
             background: #2a2a2a;
         }
+        .dark-mode textarea {
+            background-color: #2d2d2d;
+            color: #f0f0f0;
+            border-color: #555;
+        }
+        .dark-mode textarea::placeholder {
+            color: #999;
+        }
 
         /* Input and Button Styles */
         .input-focus:focus {
@@ -140,39 +148,52 @@
             background: #7f1d1d;
             color: #fecaca;
         }
+
+        /* Help Button */
+        .help-button {
+            background-color: #8B2BE2;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        .help-button:hover {
+            background-color: #7A26C9;
+            transform: scale(1.1);
+        }
     </style>
 
     <!-- Particle Background -->
     <div id="particles-js"></div>
 
-    <div x-data="projectForm()" class="max-w-4xl mx-auto p-6 relative" :class="{ 'dark-mode': darkMode }">
+    <div x-data="projectForm()" class="max-w-4xl mx-auto p-6 relative" >
         <!-- Sticky Header -->
         <div class="sticky top-0 z-20 bg-white dark:bg-gray-800 shadow-md p-4 rounded-lg mb-8 flex justify-between items-center animate-slide-in">
             <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-200 animate-pulse">Create New Project</h2>
             <div class="flex items-center space-x-4">
                 <!-- Help Button -->
-                <button @click="showTour = !showTour" class="text-gray-600 dark:text-gray-300 hover:text-gray-800 transition">
-                    <i class="fas fa-question-circle text-2xl animate-bounce"></i>
-                </button>
-                <!-- Dark Mode Toggle -->
-                <button @click="darkMode = !darkMode" class="text-gray-600 dark:text-gray-300 hover:text-gray-800 transition">
-                    <i :class="darkMode ? 'fas fa-sun' : 'fas fa-moon'" class="text-2xl"></i>
+                <button @click="showTour = true" class="help-button">
+                    <i class="fas fa-question-circle text-xl"></i>
                 </button>
             </div>
         </div>
 
         <!-- Guided Tour -->
-        <div x-show="showTour" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-            <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg max-w-md">
+        <div x-show="showTour" x-transition class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+            <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg max-w-md mx-4">
                 <h3 class="text-lg font-bold mb-4 text-gray-800 dark:text-gray-200">Quick Guide</h3>
                 <p class="text-gray-600 dark:text-gray-300 mb-4">Follow these steps to create your project:</p>
-                <ul class="list-disc pl-5 text-gray-600 dark:text-gray-300">
-                    <li>Fill in the project name and description.</li>
-                    <li>Set the start and end dates.</li>
-                    <li>Drag and drop team members to assign them.</li>
-                    <li>Review and submit!</li>
+                <ul class="list-disc pl-5 text-gray-600 dark:text-gray-300 space-y-2">
+                    <li>Fill in the project name and description</li>
+                    <li>Set the start and end dates</li>
+                    <li>Drag and drop team members to assign them</li>
+                    <li>Review and submit your project</li>
                 </ul>
-                <button @click="showTour = false" class="mt-4 px-4 py-2 bg-[#8B2BE2] text-white rounded hover:bg-[#7A26C9] transition">Got it!</button>
+                <div class="mt-6 flex justify-end">
+                    <button @click="showTour = false" class="px-4 py-2 bg-[#8B2BE2] text-white rounded hover:bg-[#7A26C9] transition">
+                        Got it!
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -180,21 +201,7 @@
         <div x-show="submitError" class="error-message animate-fade-in" x-text="submitError"></div>
 
         <!-- Progress Sidebar -->
-        <div class="flex">
-            <div class="w-1/4 pr-6 hidden md:block">
-                <div class="sticky top-20">
-                    <div class="mb-4 animate-fade-in" :style="'animation-delay: ' + (index * 0.1) + 's'" x-for="(stepName, index) in ['Project Details', 'Timeline', 'Team', 'Review']" :key="index">
-                        <div class="flex items-center mb-2 cursor-pointer" @click="step = index + 1" :class="{ 'text-[#8B2BE2] font-bold': step === index + 1 }">
-                            <span class="w-8 h-8 flex items-center justify-center rounded-full border-2" :class="step >= index + 1 ? 'border-[#8B2BE2] bg-[#8B2BE2] text-white' : 'border-gray-300 text-gray-500'">
-                                <i x-show="step > index + 1" class="fas fa-check"></i>
-                                <span x-show="step <= index + 1" x-text="index + 1"></span>
-                            </span>
-                            <span class="ml-2" x-text="stepName"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+        <div class="flex justify-center">
             <!-- Form Card -->
             <div class="w-full md:w-3/4">
                 <div class="card bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg animate-glow">
@@ -206,7 +213,7 @@
                             <div class="flex-1 text-center" :class="{ 'text-[#8B2BE2] font-bold': step >= 3 }">Team</div>
                             <div class="flex-1 text-center" :class="{ 'text-[#8B2BE2] font-bold': step >= 4 }">Review</div>
                         </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="w-full bg-gray-200 rounded-full h-2 dark:bg-gray-600">
                             <div class="bg-[#8B2BE2] h-2 rounded-full transition-all duration-500" :style="{ width: (step / 4) * 100 + '%' }"></div>
                         </div>
                     </div>
@@ -230,7 +237,7 @@
                                     x-model="form.name"
                                     @input="validateName"
                                     placeholder="e.g., Mobile App Redesign"
-                                    class="w-full px-4 py-2 border rounded-lg input-focus transition"
+                                    class="w-full px-4 py-2 border rounded-lg input-focus transition dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                     :class="{ 'border-red-500 animate-shake': errors.name }"
                                     required
                                     aria-required="true"
@@ -241,14 +248,14 @@
                                 <label for="description" class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1 relative tooltip-parent">
                                     Description
                                     <i class="fas fa-info-circle ml-1 text-gray-500 cursor-pointer"></i>
-                                    <span class="tooltip absolute bg-gray-800 text-white text-xs rounded p-2 mt-2">Outline the project’s goals</span>
+                                    <span class="tooltip absolute bg-gray-800 text-white text-xs rounded p-2 mt-2">Outline the project's goals and objectives</span>
                                 </label>
                                 <textarea
                                     id="description"
                                     name="description"
                                     x-model="form.description"
-                                    placeholder="e.g., Develop a new feature"
-                                    class="w-full px-4 py-2 border rounded-lg input-focus transition h-32 resize-none"
+                                    placeholder="e.g., Develop a new feature for our mobile application that will improve user engagement by 30%"
+                                    class="w-full px-4 py-2 border rounded-lg input-focus transition h-32 resize-none dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                                 ></textarea>
                             </div>
                             <div class="flex justify-end">
@@ -265,7 +272,7 @@
 
                         <!-- Step 2: Timeline -->
                         <div x-show="step === 2" class="animate-slide-in">
-                            <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                                 <div>
                                     <label for="start_date" class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1 relative tooltip-parent">
                                         Start Date
@@ -278,7 +285,7 @@
                                         name="start_date"
                                         x-model="form.start_date"
                                         @input="validateDates"
-                                        class="w-full px-4 py-2 border rounded-lg input-focus transition"
+                                        class="w-full px-4 py-2 border rounded-lg input-focus transition dark:bg-gray-700 dark:border-gray-600"
                                     >
                                 </div>
                                 <div>
@@ -293,7 +300,7 @@
                                         name="end_date"
                                         x-model="form.end_date"
                                         @input="validateDates"
-                                        class="w-full px-4 py-2 border rounded-lg input-focus transition"
+                                        class="w-full px-4 py-2 border rounded-lg input-focus transition dark:bg-gray-700 dark:border-gray-600"
                                         :class="{ 'border-red-500 animate-shake': errors.dates }"
                                         required
                                         aria-required="true"
@@ -305,7 +312,7 @@
                                 <button
                                     type="button"
                                     @click="prevStep"
-                                    class="relative px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition overflow-hidden"
+                                    class="relative px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition overflow-hidden dark:bg-gray-600 dark:text-gray-200"
                                     @mousedown="addRipple($event)"
                                 >
                                     Previous
@@ -335,7 +342,7 @@
                                         id="manager_id"
                                         name="manager_id"
                                         x-model="form.manager_id"
-                                        class="w-full px-4 py-2 border rounded-lg input-focus transition"
+                                        class="w-full px-4 py-2 border rounded-lg input-focus transition dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                     >
                                         <option value="">Select a manager (optional)</option>
                                         @foreach(\App\Models\User::where('role', 'Manager')->get() as $manager)
@@ -348,32 +355,41 @@
                                 <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1 relative tooltip-parent">
                                     Team Members
                                     <i class="fas fa-info-circle ml-1 text-gray-500 cursor-pointer"></i>
-                                    <span class="tooltip absolute bg-gray-800 text-white text-xs rounded p-2 mt-2">Drag users to assign them</span>
+                                    <span class="tooltip absolute bg-gray-800 text-white text-xs rounded p-2 mt-2">Drag users to assign them to your project</span>
                                 </label>
-                                <div class="flex space-x-4">
+                                <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
                                     <!-- Available Users -->
-                                    <div class="w-1/2 p-4 border rounded-lg" @dragover.prevent @drop="dropUser($event, false)">
+                                    <div class="w-full md:w-1/2 p-4 border rounded-lg dark:border-gray-600"
+                                         @dragover.prevent="isDragging = true"
+                                         @dragleave="isDragging = false"
+                                         @drop="dropUser($event, false); isDragging = false">
                                         <h4 class="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-2">Available</h4>
                                         <template x-for="user in availableUsers" :key="user.id">
                                             <div
-                                                class="p-2 bg-gray-100 dark:bg-gray-600 rounded mb-2 cursor-move"
+                                                class="p-2 bg-gray-100 dark:bg-gray-600 rounded mb-2 cursor-move hover:bg-gray-200 dark:hover:bg-gray-500 transition"
                                                 draggable="true"
                                                 @dragstart="dragUser($event, user)"
                                                 x-text="user.username"
                                             ></div>
                                         </template>
+                                        <p x-show="availableUsers.length === 0" class="text-gray-500 dark:text-gray-400 text-sm">No available users</p>
                                     </div>
                                     <!-- Selected Team -->
-                                    <div class="w-1/2 p-4 border rounded-lg" :class="{ 'drag-over': isDragging }" @dragover.prevent @drop="dropUser($event, true)">
-                                        <h4 class="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-2">Team</h4>
+                                    <div class="w-full md:w-1/2 p-4 border rounded-lg dark:border-gray-600"
+                                         :class="{ 'drag-over': isDragging }"
+                                         @dragover.prevent="isDragging = true"
+                                         @dragleave="isDragging = false"
+                                         @drop="dropUser($event, true); isDragging = false">
+                                        <h4 class="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-2">Team Members</h4>
                                         <template x-for="member in form.team_members" :key="member.id">
                                             <div
-                                                class="p-2 bg-[#8B2BE2] text-white rounded mb-2 cursor-move"
+                                                class="p-2 bg-[#8B2BE2] text-white rounded mb-2 cursor-move hover:bg-[#7A26C9] transition"
                                                 draggable="true"
                                                 @dragstart="dragUser($event, member)"
                                                 x-text="member.username"
                                             ></div>
                                         </template>
+                                        <p x-show="form.team_members.length === 0" class="text-gray-500 dark:text-gray-400 text-sm">No team members selected</p>
                                     </div>
                                 </div>
                             </div>
@@ -381,7 +397,7 @@
                                 <button
                                     type="button"
                                     @click="prevStep"
-                                    class="relative px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition overflow-hidden"
+                                    class="relative px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition overflow-hidden dark:bg-gray-600 dark:text-gray-200"
                                     @mousedown="addRipple($event)"
                                 >
                                     Previous
@@ -401,22 +417,24 @@
                         <div x-show="step === 4" class="animate-slide-in">
                             <h3 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">Review Your Project</h3>
                             <div class="mb-4 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
-                                <p><strong>Project Name:</strong> <span x-text="form.name || 'Not provided'"></span></p>
-                                <p><strong>Description:</strong> <span x-text="form.description || 'Not provided'"></span></p>
-                                <p><strong>Start Date:</strong> <span x-text="form.start_date || 'Not provided'"></span></p>
-                                <p><strong>End Date:</strong> <span x-text="form.end_date || 'Not provided'"></span></p>
-                                <p><strong>Project Manager:</strong>
-                                    <span x-text="form.manager_id ? availableUsers.find(u => u.id == form.manager_id)?.username || 'Not assigned' : 'Not assigned'"></span>
-                                </p>
-                                <p><strong>Team Members:</strong>
-                                    <span x-text="form.team_members.length ? form.team_members.map(m => m.username).join(', ') : 'None selected'"></span>
-                                </p>
+                                <div class="space-y-3">
+                                    <p><strong class="text-gray-700 dark:text-gray-300">Project Name:</strong> <span x-text="form.name || 'Not provided'" class="text-gray-900 dark:text-white"></span></p>
+                                    <p><strong class="text-gray-700 dark:text-gray-300">Description:</strong> <span x-text="form.description || 'Not provided'" class="text-gray-900 dark:text-white"></span></p>
+                                    <p><strong class="text-gray-700 dark:text-gray-300">Start Date:</strong> <span x-text="form.start_date ? new Date(form.start_date).toLocaleDateString() : 'Not provided'" class="text-gray-900 dark:text-white"></span></p>
+                                    <p><strong class="text-gray-700 dark:text-gray-300">End Date:</strong> <span x-text="form.end_date ? new Date(form.end_date).toLocaleDateString() : 'Not provided'" class="text-gray-900 dark:text-white"></span></p>
+                                    <p><strong class="text-gray-700 dark:text-gray-300">Project Manager:</strong>
+                                        <span x-text="form.manager_id ? availableUsers.find(u => u.id == form.manager_id)?.username || 'Not assigned' : 'Not assigned'" class="text-gray-900 dark:text-white"></span>
+                                    </p>
+                                    <p><strong class="text-gray-700 dark:text-gray-300">Team Members:</strong>
+                                        <span x-text="form.team_members.length ? form.team_members.map(m => m.username).join(', ') : 'None selected'" class="text-gray-900 dark:text-white"></span>
+                                    </p>
+                                </div>
                             </div>
                             <div class="flex justify-between">
                                 <button
                                     type="button"
                                     @click="prevStep"
-                                    class="relative px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition overflow-hidden"
+                                    class="relative px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition overflow-hidden dark:bg-gray-600 dark:text-gray-200"
                                     @mousedown="addRipple($event)"
                                 >
                                     Previous
@@ -481,8 +499,8 @@
         function projectForm() {
             return {
                 step: 1,
-                darkMode: false,
-                showTour: true,
+                darkMode: localStorage.getItem('darkMode') === 'true' || false,
+                showTour: false,
                 showConfetti: false,
                 isSubmitting: false,
                 submitError: '',
@@ -503,6 +521,12 @@
                 },
                 draggedUser: null,
                 isDragging: false,
+                init() {
+                    // Check for prefers-color-scheme on initial load
+                    if (localStorage.getItem('darkMode') === null && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                        this.darkMode = true;
+                    }
+                },
                 validateName() {
                     this.errors.name = this.form.name.trim() === '' ? 'Project name is required' : '';
                 },
@@ -543,6 +567,7 @@
                     this.isDragging = false;
                     const user = this.draggedUser;
                     if (!user) return;
+
                     if (isTeam) {
                         if (!this.form.team_members.find(m => m.id === user.id)) {
                             this.form.team_members.push(user);
@@ -603,6 +628,7 @@
                                 'X-Requested-With': 'XMLHttpRequest'
                             }
                         });
+
                         if (response.ok) {
                             this.showConfetti = true;
                             setTimeout(() => {

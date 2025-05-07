@@ -30,7 +30,7 @@ class ProjectController extends Controller
     public function myProjects()
     {
         $projects = $this->projectService->getEmployeeProjects();
-        return view('projects.my-Projects', compact('projects')); // Reusing the manager view
+        return view('projects.my-projects', compact('projects')); // Reusing the manager view
     }
     public function managerProjects()
     {
